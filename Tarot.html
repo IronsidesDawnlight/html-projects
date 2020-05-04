@@ -1,0 +1,366 @@
+<style type="text/css">
+    body {
+        font-family: "Consolas",verdana, arial, helvetica, sans-serif;
+        font-size: 12.8px;
+        color: #333;
+    }
+
+    a {
+        color: #b01;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+</style>
+
+
+<body>
+    <div id="type">
+        <input type="radio" name="type-sel" value="1" checked>单张塔罗牌
+        <input type="radio" name="type-sel" value="2" >凯尔特十字
+        <input type="radio" name="type-sel" value="3">圣三角
+        <input type="radio" name="type-sel" value="4">二选一
+        <input type="radio" name="type-sel" value="4">是与否
+    </div>
+    <p>请专注于你要问的问题，然后抽牌</p>
+    <p>
+        <button onclick="begin();">抽牌</button>
+    </p>
+    <div id="Result">
+    </div>
+    <div id="Explanation">
+    </div>
+</body>
+
+<script language="javascript">
+    var result = ""
+    var visited = [];
+
+    function begin() {
+        var cardtype = document.getElementsByName('type-sel');
+        if (cardtype[0].checked) {
+            Single();
+        }
+        if (cardtype[1].checked) {
+            Cross();
+        }
+        if (cardtype[2].checked) {
+            Three();
+        }
+        if (cardtype[3].checked) {
+            Choice();
+        }
+        if (cardtype[4].checked) {
+            YesNo();
+        }
+    }
+
+    function Single() {
+        result = "";
+        visited = []
+        document.getElementById('Explanation').innerHTML = ""
+        Draw();
+        document.getElementById('Result').innerHTML = result
+    }
+
+    function Cross() {
+        result = "";
+        visited = []
+        document.getElementById('Explanation').innerHTML = ""
+        result = result + "<p>基本情况："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>影响现状的因素："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>理想："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>基础条件："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>过去："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>未来："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>自我："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>环境："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>希望或恐惧："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>结果："
+        Draw();
+        result = result + "</p>"
+        document.getElementById('Result').innerHTML = result
+    }
+    function Three() {
+        result = "";
+        visited = []
+        document.getElementById('Explanation').innerHTML = ""
+        result = result + "<p>第一张牌："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>第二张牌："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>第三张牌："
+        Draw();
+        result = result + "</p>"
+        document.getElementById('Result').innerHTML = result
+    }
+    function Choice() {
+        result = "";
+        visited = []
+        document.getElementById('Explanation').innerHTML = ""
+        result = result + "<p>当前状况："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>第一种选择的状况："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>第二种选择的状况："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>第一种选择的结果："
+        Draw();
+        result = result + "</p>"
+        result = result + "<p>第二种选择的结果："
+        Draw();
+        result = result + "</p>"
+        document.getElementById('Result').innerHTML = result
+    }
+    function YesNo() {
+        result = "";
+        visited = []
+        document.getElementById('Explanation').innerHTML = ""
+        var Cards = ["愚者——明确的“是”。",
+            "魔术师——明确的“是”。",
+            "女祭司——不分是否，依直觉解答。 <br> 精神层次的、梦想的、沉静的、含蓄的、深思的、理智的思考、有女性智慧的、内在丰富的、刚硬的、绝对的。",
+            "女皇——明确的“是”。",
+            "皇帝——明确的“是”。",
+            "教皇——不分是否，依直觉解答。 <br> 宗教的、指引的、真理的、教导的、专业的、与学习有关的、超越物质层面的精神层次的、精神上的权威。",
+            "恋人——不分是否，依直觉解答。 <br> 爱情的、快乐的、合作的、契约的、情感的、关系稳固的、有吸引力的、热情的、被祝福的、有承诺的。",
+            "战车——明确的“是”。",
+            "力量——明确的“否”。",
+            "隐者——明确的“否”。",
+            "命运之轮——不分是否，依直觉解答。 <br> 命运的变化、神秘的变化、不可测的未来、自然的法则、神秘的力量、命运与机会、自行运转的、顺势而为的。",
+            "正义——明确的“是”。",
+            "倒吊人——明确的“否”。",
+            "死神——明确的“否”。",
+            "节制——明确的“否”。",
+            "恶魔——明确的“否”。",
+            "塔——明确的“否”。",
+            "星星——明确的“是”。",
+            "月亮——不分是否，依直觉解答。 <br> 幻象的、善变的、环境黯淡的、黑夜的不安、集体的意识、神秘的气息、阴晴不定的、潜意识的欲念、混乱的、低潮的、欺骗的、诡异的、模糊的状况、内在的直觉与声音。",
+            "太阳——明确的“是”。",
+            "审判——不分是否，依直觉解答。 <br> 轮回的、考验的、审判的、新的循环的、甦醒的、更新的、重生的、精神的超脱的、评估的、显著的改变、重要的变革、新纪元的开始。",
+            "世界——明确的“是”。",
+            "圣杯九——明确的“是”。",
+            "圣杯Ace——调整自己的动作，或等待时间的安排。",
+            "权杖Ace——调整自己的动作，或等待时间的安排。",
+            "宝剑Ace——调整自己的动作，或等待时间的安排。",
+            "星币Ace——调整自己的动作，或等待时间的安排。"
+        ]
+        Index = Math.floor(Math.random() * (27));
+        result = result + Cards[Index];
+        document.getElementById('Result').innerHTML = result
+    }
+
+    function Draw() {
+        var Cards = ["愚者正位—— <a href='JavaScript:Fool();'>查看释义</a>",
+            "愚者逆位—— <a href='JavaScript:Fool_R();'>查看释义</a>",
+            "魔术师正位—— <a href='JavaScript:Magician();'>查看释义</a>",
+            "魔术师逆位—— <a href='JavaScript:Magician_R();'>查看释义</a>",
+            "女祭司正位—— <a href='JavaScript:Priestess();'>查看释义</a>",
+            "女祭司逆位—— <a href='JavaScript:Priestess_R();'>查看释义</a>",
+            "女皇正位—— <a href='JavaScript:Empress();'>查看释义</a>",
+            "女皇逆位—— <a href='JavaScript:Empress_R();'>查看释义</a>",
+            "皇帝正位—— <a href='JavaScript:Emperor();'>查看释义</a>",
+            "皇帝逆位—— <a href='JavaScript:Emperor_R();'>查看释义</a>",
+            "教皇正位—— <a href='JavaScript:Hierophant();'>查看释义</a>",
+            "教皇逆位—— <a href='JavaScript:Hierophant_R();'>查看释义</a>",
+            "恋人正位—— <a href='JavaScript:Lover();'>查看释义</a>",
+            "恋人逆位—— <a href='JavaScript:Lover_R();'>查看释义</a>",
+            "战车正位—— <a href='JavaScript:Chariot();'>查看释义</a>",
+            "战车逆位—— <a href='JavaScript:Chariot_R();'>查看释义</a>",
+            "力量正位—— <a href='JavaScript:Strength();'>查看释义</a>",
+            "力量逆位—— <a href='JavaScript:Strength_R();'>查看释义</a>",
+            "隐者正位—— <a href='JavaScript:Hermit();'>查看释义</a>",
+            "隐者逆位—— <a href='JavaScript:Hermit_R();'>查看释义</a>",
+            "命运之轮正位—— <a href='JavaScript:Wheel();'>查看释义</a>",
+            "命运之轮逆位—— <a href='JavaScript:Wheel_R();'>查看释义</a>",
+            "正义正位—— <a href='JavaScript:Justice();'>查看释义</a>",
+            "正义逆位—— <a href='JavaScript:Justice_R();'>查看释义</a>",
+            "倒吊人正位—— <a href='JavaScript:Hanged();'>查看释义</a>",
+            "倒吊人逆位—— <a href='JavaScript:Hanged_R();'>查看释义</a>",
+            "死神正位—— <a href='JavaScript:Death();'>查看释义</a>",
+            "死神逆位—— <a href='JavaScript:Death_R();'>查看释义</a>",
+            "节制正位—— <a href='JavaScript:Temperance();'>查看释义</a>",
+            "节制逆位—— <a href='JavaScript:Temperance_R();'>查看释义</a>",
+            "恶魔正位—— <a href='JavaScript:Devil();'>查看释义</a>",
+            "恶魔逆位—— <a href='JavaScript:Devil_R();'>查看释义</a>",
+            "塔正位—— <a href='JavaScript:Tower();'>查看释义</a>",
+            "塔逆位—— <a href='JavaScript:Tower_R();'>查看释义</a>",
+            "星星正位—— <a href='JavaScript:Star();'>查看释义</a>",
+            "星星逆位—— <a href='JavaScript:Star_R();'>查看释义</a>",
+            "月亮正位—— <a href='JavaScript:Moon();'>查看释义</a>",
+            "月亮逆位—— <a href='JavaScript:Moon_R();'>查看释义</a>",
+            "太阳正位—— <a href='JavaScript:Sun();'>查看释义</a>",
+            "太阳逆位—— <a href='JavaScript:Sun_R();'>查看释义</a>",
+            "审判正位—— <a href='JavaScript:Judgement();'>查看释义</a>",
+            "审判逆位—— <a href='JavaScript:Judgement_R();'>查看释义</a>",
+            "世界正位—— <a href='JavaScript:World();'>查看释义</a>",
+            "世界逆位—— <a href='JavaScript:World_R();'>查看释义</a>"]
+
+        Index = Math.floor(Math.random() * (44));
+        while (visited.indexOf(Math.floor(Index / 2)) != -1) {
+            Index = Math.floor(Math.random() * (44));
+        }
+        visited.push(Math.floor(Index/2))
+        result = result + "单张塔罗牌："
+        result = result + Cards[Index];
+    }
+
+    function Fool() {
+        document.getElementById('Explanation').innerHTML = '<p>释义：随性的、信任的、勇于冒险的、流浪的、自然的、状况外的、出发前进的、盲目乐观的、自得其乐的、天真的、与世界关联性不大的。</p><p>恋爱：天真浪漫的爱</p><p>工作：具冒险心、追求新奇</p><p>健康：健康状况佳</p><p>娱乐：旅行有意外收获</p><p>其它：冒险家</p><p>金钱：孤注一掷、后果自负</p><p>结论：美好的梦想</p>'
+    }
+    function Fool_R() {
+        document.getElementById('Explanation').innerHTML = '<p>释义：冒险的行动，追求可能性，重视梦想，无视物质的损失，离开家园，过于信赖别人，为出外旅行而烦恼。心情空虚、轻率的恋情、无法长久持续的融洽感、不安的爱情的旅程、对婚姻感到束缚、彼此忽冷忽热、不顾众人反对坠入爱河、为恋人的负心所伤、感情不专一。</p><p>恋爱：盲目、忽冷忽热</p><p>工作：缺乏稳定性、无责任心</p><p>健康：不安定的生活而生病</p><p>娱乐：不能放心的旅行</p><p>其它：不能下决心、怪癖</p><p>金钱：没有理财能力、收入不定、乱花钱</p><p>结论：不切实际</p>'
+    }
+    function Magician() {
+        document.getElementById('Explanation').innerHTML = '<p>释义：通天下地的、掌控一切的、拥有技术的、有智慧的、有能力的、信心满满的、重视自我的、掌握资源的、运筹帷幄的、法力无边的。</p><p>恋爱：开展新恋情</p><p>工作：新的计划顺利</p><p>健康：心情开朗</p><p>娱乐：意想不到的收获</p><p>其它：好的开始</p><p>结论：前程看好</p>'
+    }
+    function Magician_R() {
+        document.getElementById('Explanation').innerHTML = '<p>释义：意志力薄弱，起头难，走入错误的方向，知识不足，被骗和失败。</p><p>恋爱：缺乏创意的爱情</p><p>工作：失败</p><p>健康：健康不佳</p><p>娱乐：玩乐过度</p><p>其它：优柔寡断</p><p>结论：前途堪虑</p>'
+    }
+    function Priestess() {
+        document.getElementById('Explanation').innerHTML = '<p>精神层次的、梦想的、沉静的、含蓄的、深思的、理智的思考、有女性智慧的、内在丰富的、刚硬的、绝对的。</p><p>恋爱：蕴藏内心的热情</p><p>工作：研究心旺盛</p><p>健康：知性美、充实的生活</p><p>娱乐：知性之旅</p><p>其它：深思熟虑</p><p>金钱：决策重大的投资可获利</p><p>结论：智慧、充实</p>'
+    }
+    function Priestess_R() {
+        document.getElementById('Explanation').innerHTML = '<p>过于洁癖，无知，贪心，目光短浅，自尊心过高，偏差的判断，有勇无谋，自命不凡。</p><p>恋爱：无法实现的相思</p><p>工作：缺乏足够的智慧</p><p>健康：精神上的压力</p><p>娱乐：提不起劲</p><p>其它：欠缺理解力和包容力</p><p>金钱：不断浪费、没有计划的花费</p><p>结论：不智、欲求不满</p>'
+    }
+    function Empress() {
+        document.getElementById('Explanation').innerHTML = '<p>温柔的、女性特质的、世俗的、娱乐的、享受恋爱的、美感的、丰收的、创造力的、多产的、物质丰硕的。</p><p>恋爱：有结果的爱</p><p>工作：逐渐繁荣</p><p>健康：良好</p><p>娱乐：优雅之旅</p><p>其它：充实的生活</p><p>金钱：财运甚佳</p><p>结论：丰收</p>'
+    }
+    function Empress_R() {
+        document.getElementById('Explanation').innerHTML = '<p>不活泼，缺乏上进心，散漫的生活习惯，无法解决的事情，不能看到成果，担于享乐，环境险恶，与家人发生纠纷。</p><p>恋爱：没有结果的爱</p><p>工作：业绩下降</p><p>健康：太胖</p><p>娱乐：进行的计划会遇到障碍</p><p>其它：虚荣心</p><p>金钱：过度浪费、投资过剩、不必要的损失</p><p>结论：得不到想要的</p>'
+    }
+    function Emperor() {
+        document.getElementById('Explanation').innerHTML = '<p>权力的、控制的、成功的、管理的、守成的、理智的、升迁的、爱事业的男人、孤独而劳碌的。</p><p>恋爱：坚定不变的心</p><p>工作：具领导力</p><p>健康：强壮身体</p><p>娱乐：能够好好料理一切</p><p>其它：成熟稳重</p><p>金钱：对金钱感到满足</p><p>结论：领导力强</p>'
+    }
+    function Emperor_R() {
+        document.getElementById('Explanation').innerHTML = '<p>幼稚，无力，独裁，撒娇任性，平凡，没有自信，行动力不足，意志薄弱，被支配。</p><p>恋爱：被人摆布</p><p>工作：欠缺管理</p><p>健康：注意成人病</p><p>娱乐：不可能实现的旅行</p><p>其它：不成熟</p><p>金钱：没有经济基础、财务发生困难、预算不够、损失金钱</p><p>结论：短时间会遇到挫折</p>'
+    }
+    function Hierophant() {
+        document.getElementById('Explanation').innerHTML = '<p>宗教的、指引的、真理的、教导的、专业的、与学习有关的、超越物质层面的精神层次的、精神上的权威。</p><p>恋爱：良好姻缘</p><p>工作：有贵人相助</p><p>健康：有名医的建言</p><p>娱乐：提升修养</p><p>其它：深度的信任感</p><p>金钱：金钱观保守</p><p>结论：得道多助</p>'
+    }
+    function Hierophant_R() {
+        document.getElementById('Explanation').innerHTML = '<p>错误的讯息，恶意的规劝，上当，援助被中断，愿望无法达成，被人利用，被放弃。</p><p>恋爱：无缘</p><p>工作：被孤立</p><p>健康：精神疲惫</p><p>娱乐：被团体排挤</p><p>其它：需开阔视野</p><p>金钱：因帮朋友而损失金钱、得不到援助</p><p>结论：孤军奋战</p>'
+    }
+    function Lover() {
+        document.getElementById('Explanation').innerHTML = '<p>爱情的、快乐的、合作的、契约的、情感的、关系稳固的、有吸引力的、热情的、被祝福的、有承诺的。</p><p>恋爱：热恋</p><p>工作：有人合作</p><p>健康：情况佳</p><p>娱乐：甜蜜的旅行</p><p>金钱：不用烦</p><p>其它：意气相投</p><p>结论：结合</p>'
+    }
+    function Lover_R() {
+        document.getElementById('Explanation').innerHTML = '<p>禁不起诱惑，纵欲过度，反覆无常，友情变淡，厌倦，争吵，华丽的打扮，优柔寡断。</p><p>恋爱：分手</p><p>工作：解聘、辞职</p><p>健康：失去年轻</p><p>娱乐：兴趣太多难专精</p><p>金钱：花钱、破财、资金短缺</p><p>其它：关系失和</p><p>结论：分离</p>'
+    }
+    function Chariot() {
+        document.getElementById('Explanation').innerHTML = '<p>行动、征服、有战斗力的、攻击性、解决问题的、野心勃勃的、意志力坚强的、不顾一切向前的、冲动的，速度快的、精力旺盛的。</p><p>恋爱：战胜情敌</p><p>工作：攻无不克</p><p>健康：精力充沛</p><p>娱乐：兜风旅行</p><p>金钱：可考虑冒险的投资</p><p>其它：积极行动</p><p>结论：胜利</p>'
+    }
+    function Chariot_R() {
+        document.getElementById('Explanation').innerHTML = '<p>争论失败，发生纠纷，阻滞，违返规则，诉诸暴力，顽固的男子，突然的失败，不良少年，挫折和自私自利。</p><p>恋爱：被抛弃</p><p>工作：挫折多</p><p>健康：注意事故</p><p>娱乐：旅行不顺、可能有事故</p><p>金钱：损财、赌搏失利、资金运转困难</p><p>其它：原地踏步</p><p>结论：失败</p>'
+    }
+    function Strength() {
+        document.getElementById('Explanation').innerHTML = '<p>精神层面的、高层次的指引、诚意的、内在而发的魅力、有气质的、健康的、无限大的能量、勇气的、充满能量的、自信的、成功的。</p><p>恋爱：真心的爱</p><p>工作：全力冲刺</p><p>健康：培养体力</p><p>娱乐：惊险愉快之旅</p><p>金钱：财务正常、收支平衡</p><p>其它：突破难关</p><p>结论：有意志力</p>'
+    }
+    function Strength_R() {
+        document.getElementById('Explanation').innerHTML = '<p>胆小，输给强者，经不起诱惑，屈服在权威与常识之下，没有实践便告放弃，虚荣，懦弱，没有耐性。</p><p>恋爱：控制不了自己</p><p>工作：未做以前先放弃</p><p>健康：体力变差</p><p>娱乐：强行进行会失败</p><p>金钱：逢赌必输、不善理财、透支</p><p>其它：退缩</p><p>结论：没意志力</p>'
+    }
+    function Hermit() {
+        document.getElementById('Explanation').innerHTML = '<p>智慧的象征、累积了知识与智慧的、内心在寻找光明、在黑暗中追求真理、孤独的、清高的、独立的、沈思的、致力于内在成长的、迈向智慧的阶段、自我认知、自我了解。</p><p>恋爱：不灭的爱</p><p>工作：脚踏实地</p><p>健康：关心自己健康</p><p>娱乐：享受个人生活</p><p>金钱：开源节</p><p>其它：贤明果决</p><p>结论：等待机会就会成功</p>'
+    }
+    function Hermit_R() {
+        document.getElementById('Explanation').innerHTML = '<p>憎恨孤独，自卑，担心，幼稚思想，过于慎重导致失败，偏差，不宜旅行。</p><p>恋爱：不被了解的寂寞</p><p>工作：注意力不集中</p><p>健康：有慢性病</p><p>娱乐：找回被遗忘的自己</p><p>金钱：无谓的花费、愈花愈大</p><p>其它：不够沉着</p><p>结论：错失良机</p>'
+    }
+    function Wheel() {
+        document.getElementById('Explanation').innerHTML = '<p>命运的变化、神秘的变化、不可测的未来、自然的法则、神秘的力量、命运与机会、自行运转的、顺势而为的。</p><p>恋爱：命中注定的姻缘</p><p>工作：转折点</p><p>健康：健康改善</p><p>娱乐：命定的邂逅</p><p>金钱：临时的收入、意外之财</p><p>其它：意想不到的好运</p><p>结论：时机转好</p>'
+    }
+    function Wheel_R() {
+        document.getElementById('Explanation').innerHTML = '<p>挫折，计划泡汤，障碍，无法修正方向，往坏处发展，恶性循环，中断。</p><p>恋爱：昙花一现的恋情</p><p>工作：低潮期</p><p>健康：健康恶化</p><p>娱乐：计划取消</p><p>金钱：超支、小心骗局</p><p>其它：厄运期</p><p>结论：时机转坏</p>'
+    }
+    function Justice() {
+        document.getElementById('Explanation').innerHTML = '<p>理性的、正义的、公平的、明智的、不带情绪的、法律事件、均衡的判断、法律制度、不要被眼睛所蒙蔽了。</p><p>爱情婚姻：理性交往、好性情、与温文而雅的对象交往、恋爱双方彼此平衡、轻松的交往、老实的恋情、真心的交往、学业与恋情兼顾</p><p>事业学业：各科成绩出众、事业与家庭兼顾、正直的处事获得成功、个人学业与社团活动兼顾、适合律师相关工作</p><p>人际财富：公平待人、适合担任解决争端角色、重义气、受到交往对象的照顾、贷款获准、财运攀升、得到应有的回报</p><p>健康生活：身材匀称、精神状态稳定、适合情侣装打扮</p><p>其他：音乐相关的事物能够开拓心情。</p>'
+    }
+    function Justice_R() {
+        document.getElementById('Explanation').innerHTML = '<p>失衡、偏见、纷扰、诉讼、独断专行、问心有愧、无法两全、表里不一、男女性格不合、情感波折、无视社会道德的恋情。</p><p>爱情婚姻：不够主动、彼此个性不合、不顾后果的交往、脚踏两支船、单相思、第三者插足、对待恋情不够老实、与异性交往暧昧不清</p><p>事业学业：偏科现象严重、墨守成规以致失败、缺乏能力或自信、行为不检点、考试失误、高估自己</p><p>人际财富：缺乏道德观念、烂好人、左右为难、对朋友过于挑剔、财务危机、财不露白、遭遇债务纠纷</p><p>健康生活：身材不匀称、没有办法控制体重、偏食</p><p>其他：对逛街购物已赶乏味、对任何事物都没有办法产生长久爱好。</p>'
+    }
+    function Hanged() {
+        document.getElementById('Explanation').innerHTML = '<p>精神层次的、牺牲奉献的心态、正在修练的、专注投入的、智慧来自于牺牲、天机来自于深思熟虑的、智慧的、觉察的、谨慎的、预知的、直觉的力量、正在觉醒的。</p><p>恋爱：为爱付出一切</p><p>工作：考验的来临</p><p>健康：该注意自己健康</p><p>娱乐：修行</p><p>金钱：货款批准、财运上升</p><p>其它：考验</p><p>结论：奉献</p>'
+    }
+    function Hanged_R() {
+        document.getElementById('Explanation').innerHTML = '<p>失衡、偏见、纷扰、诉讼、独断专行、问心有愧、无法两全、表里不一、男女性格不合、情感波折、无视社会道德的恋情。</p><p>恋爱：得不到回报的爱</p><p>工作：陷入困境</p><p>健康：再不爱惜自己就会毁谬</p><p>娱乐：陷入困境</p><p>金钱：财务危险、货款申请不顺利</p><p>其它：该拿得起放得下</p><p>结论：为谁辛苦为谁忙</p>'
+    }
+    function Death() {
+        document.getElementById('Explanation').innerHTML = '<p>一段关系的结束、革命的、重新开始的、浴火重生的、死亡的象征、内心的结束、生命中某个阶段结束、正要开始一个新的阶段、将过去抛诸脑后。</p><p>恋爱：离别、恋情结束</p><p>工作：失业、破产</p><p>健康：生病</p><p>娱乐：失比得多的旅行</p><p>金钱：奢侈、任意购买、负债</p><p>其它：失败</p><p>结论：结束</p>'
+    }
+    function Death_R() {
+        document.getElementById('Explanation').innerHTML = '<p>抱有一线希望、起死回生、回心转意、摆脱低迷状态、挽回名誉、身体康复、突然改变计划、逃避现实、斩断情丝、与旧情人相逢。</p><p>恋爱：旧爱重燃</p><p>工作：改革、起死回生</p><p>健康：治疗成功</p><p>娱乐：宜旅行转变心情</p><p>金钱：失而复得、倍添喜气</p><p>其它：奇迹地恢复</p><p>结论：抛弃过去，重新开始</p>'
+    }
+    function Temperance() {
+        document.getElementById('Explanation').innerHTML = '<p>修练之道、调和的、双向的沟通、平衡的状态、最高的艺术、引导的、循环不已的、自我控制、自我疗愈、自我发展、情感的拯救、有才华的、有灵感的、艺术的。</p><p>恋爱：逐渐加深的爱</p><p>工作：一帆风顺</p><p>健康：增进健康</p><p>娱乐：静养之旅</p><p>金钱：财务管理得宜、可得利</p><p>其它：一切顺利</p><p>结论：渐入佳境</p>'
+    }
+    function Temperance_R() {
+        document.getElementById('Explanation').innerHTML = '<p>消耗、下降、疲劳、损失、不安、不融洽、爱情的配合度不佳。</p><p>恋爱：相处不融洽</p><p>工作：白费心力</p><p>健康：身体宜多调养</p><p>娱乐：疲惫之旅</p><p>金钱：奢侈浪费、没有节制挥霍</p><p>其它：消耗</p><p>结论：渐渐败坏</p>'
+    }
+    function Devil() {
+        document.getElementById('Explanation').innerHTML = '<p>诱惑的、不伦的、不正当的、欲望的、非世俗的、愤慨的、压抑的、限制的、消极的、恐惧的、黑暗的、沮丧的。</p><p>恋爱：盲目的爱</p><p>工作：堕落</p><p>健康：重病</p><p>娱乐：纵欲过度</p><p>金钱：被骗财、举债度日</p><p>其它：被束缚</p><p>结论：沉沦</p>'
+    }
+    function Devil_R() {
+        document.getElementById('Explanation').innerHTML = '<p>逃离拘束、解除困扰、治愈病痛、告别过去、暂停、别离、拒绝诱惑、舍弃私欲、别离时刻、爱恨交加的恋情。</p><p>恋爱：快刀斩乱麻</p><p>工作：景气恢复</p><p>健康：摆脱老毛病</p><p>娱乐：心情走出阴霾</p><p>金钱：转亏为盈、投资的时候</p><p>其它：解放</p><p>结论：东山再起</p>'
+    }
+    function Tower() {
+        document.getElementById('Explanation').innerHTML = '<p>最大的警讯、名声大坏的、僵化的、关系破裂的、难以恢复的、组织的崩溃、契约的破坏、震惊的事件、意外发生的、揭发真相的、突然的改变。</p><p>恋爱：吵架</p><p>工作：破产、受到连累</p><p>健康：急速恶化的病</p><p>娱乐：发生意外</p><p>金钱：损失金钱、赤字、破产</p><p>其它：信心崩溃</p><p>结论：毁灭</p>'
+    }
+    function Tower_R() {
+        document.getElementById('Explanation').innerHTML = '<p>困境、内讧、紧迫的状态、状况不佳、趋于稳定、骄傲自大将付出代价、背水一战、分离的预感、爱情危机。</p><p>恋爱：紧张气氛</p><p>工作：内斗多</p><p>健康：对疾病不安</p><p>娱乐：旅行延期</p><p>金钱：由零开始、表面风光</p><p>其它：紧张状态</p><p>结论：暴风雨前的宁静</p>'
+    }
+    function Star() {
+        document.getElementById('Explanation').innerHTML = '<p>美好的、温馨的、宁静的、祥和的、新生的、有希望的、和平的、放松的、治疗的、有信心的、有灵感的、振奋的、闪亮的的、晶莹剔透、内在的力量。</p><p>恋爱：理想的对象</p><p>工作：理想的工作</p><p>健康：年轻的身体</p><p>娱乐：到期待已久的地方旅行</p><p>金钱：财源涌至、依靠感觉可获收入</p><p>其它：理想、创造力</p><p>结论：心想事成</p>'
+    }
+    function Star_R() {
+        document.getElementById('Explanation').innerHTML = '<p>挫折、失望、好高骛远、异想天开、仓皇失措、事与愿违、工作不顺心、情况悲观、秘密恋情、缺少爱的生活。</p><p>恋爱：期望过高的爱</p><p>工作：为五斗米折腰</p><p>健康：衰老</p><p>娱乐：令人失望的旅行</p><p>金钱：破财、得不到应有的代价</p><p>其它：理想过高</p><p>结论：事与愿违</p>'
+    }
+    function Moon() {
+        document.getElementById('Explanation').innerHTML = '<p>幻象的、善变的、环境黯淡的、黑夜的不安、集体的意识、神秘的气息、阴晴不定的、潜意识的欲念、混乱的、低潮的、欺骗的、诡异的、模糊的状况、内在的直觉与声音。</p><p>恋爱：缺乏安全感</p><p>工作：步入晦暗期</p><p>健康：生病前兆</p><p>娱乐：印象不佳的旅行</p><p>金钱：财务危机</p><p>其它：心神不宁</p><p>结论：不安</p>'
+    }
+    function Moon_R() {
+        document.getElementById('Explanation').innerHTML = '<p>逃脱骗局、解除误会、状况好转、预知危险、等待、正视爱情的裂缝。</p><p>恋爱：先静观其变</p><p>工作：逐渐好转</p><p>健康：找到病因</p><p>娱乐：逐渐了解自己的兴趣</p><p>金钱：危机将解、提防有诈</p><p>其它：化解误会</p><p>结论：否极泰来</p>'
+    }
+    function Sun() {
+        document.getElementById('Explanation').innerHTML = '<p>生命力、热情有活力、光明的、成功的、美好的未来、客观的、理想崇高的、灵感旺盛的、精力充沛的、充满力量的、目标明朗的。</p><p>恋爱：受祝福的爱</p><p>工作：充满活力</p><p>健康：强壮的生命力</p><p>娱乐：接触大自然</p><p>金钱：赌运佳、储蓄增多</p><p>其它：开朗的未来</p><p>结论：充满朝气</p>'
+    }
+    function Sun_R() {
+        document.getElementById('Explanation').innerHTML = '<p>消沉、体力不佳、缺乏连续性、意气消沉、生活不安、人际关系不好、感情波动、离婚。</p><p>恋爱：破碎的爱</p><p>工作：没有工作意愿</p><p>健康：体弱多病</p><p>娱乐：天公不做美</p><p>金钱：没收入、因贪慕虚荣而致财政枯楬</p><p>其它：志气消沉</p><p>结论：奄奄一息</p>'
+    }
+    function Judgement() {
+        document.getElementById('Explanation').innerHTML = '<p>轮回的、考验的、审判的、新的循环的、甦醒的、更新的、重生的、精神的超脱的、评估的、显著的改变、重要的变革、新纪元的开始。</p><p>恋爱：破镜重圆</p><p>工作：复兴、大逆转</p><p>健康：恢复健康</p><p>娱乐：返乡</p><p>金钱：失而复得</p><p>其它：公开的机会</p><p>结论：东山再起</p>'
+    }
+    function Judgement_R() {
+        document.getElementById('Explanation').innerHTML = '<p>一蹶不振、幻灭、隐瞒、坏消息、无法决定、缺少目标、没有进展、消除、恋恋不舍。</p><p>恋爱：无法挽回</p><p>工作：举步维艰</p><p>健康：旧病复发</p><p>娱乐：幻灭</p><p>金钱：遗失重要的东西、千金散尽</p><p>其它：坏消息</p><p>结论：需再振作一段时间</p>'
+    }
+    function World() {
+        document.getElementById('Explanation').innerHTML = '<p>新世界的来临、所有新的一切、开启新的时代、新的境遇、完整的、已完成的、自由的、成功的、有成就的、心理健全的、感觉完满的、完成内在的旅程、旅行游历、世界一家。</p><p>恋爱：有情人终成眷属</p><p>工作：事业成功</p><p>健康：保持良好健康</p><p>娱乐：适合国外旅游</p><p>金钱：收入上升、资金运用得当</p><p>其它：完成</p><p>结论：胜利成功</p>'
+    }
+    function World_R() {
+        document.getElementById('Explanation').innerHTML = '<p>未完成、失败、准备不足、盲目接受、一时不顺利、半途而废、不圆满的结局、精神颓废、饱和状态、合谋、态度不够融洽、感情受挫。</p><p>恋爱：劳燕分飞</p><p>工作：达不到预期目标</p><p>健康：疲劳</p><p>娱乐：不顺之旅</p><p>金钱：破产、资金运用不宜</p><p>其它：无疾而终</p><p>结论：功败垂成</p>'
+    }
+</script>
