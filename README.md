@@ -20,5 +20,3 @@ to add a Tarot card drawer to your page.
 In this repo:
 
 `Tarot.html`: A Tarot card drawer and predictor. Multiple Horoscopes are supported. Click on each card to see its meaning.
-
-`SCP-generator`: Randomly generates a file about an SCP. Not random enough. Bad idea. Either re-write the program or add a lot more possibilities (not worth the time).
