@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//ZH" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
+
+<!--
+    CREDIT: hoah2333
+    THIS FILE IS COPIED AND MODIFIED FROM hoah2333's SCP Director at https://github.com/hoah2333/Archived-works/tree/main/SCP/scp-redirecter.
+    THIS FILE IS SUBJECT TO GNU GENERAL PUBLIC LICENSE. https://github.com/hoah2333/Archived-works/blob/main/LICENSE
+-->
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="text/javascript" src="https://fastly.jsdelivr.net/gh/jquery/jquery@3.6.4/dist/jquery.min.js"></script>
+</head>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var href = window.location.href;
+        var hrefRegExp = /\?_?[A-Za-z0-9\-=]+/g;
+        var link = "https://scp-wiki-cn.wikidot.com/";
+
+        if (hrefRegExp.test(href)) {
+            var arguments = href.slice(href.search(hrefRegExp) + 1);
+
+            link = replace(arguments)
+
+            window.location.replace(link);
+        } else {
+            alert("输入有误！正在将您重定向至 SCP 中文分部首页……");
+            window.location.replace('https://scp-wiki-cn.wikidot.com/');
+        }
+
+        function replace(arguments) {
+            if (/=/g.test(arguments)) {
+                var args = arguments.split("&");
+                var name, site, method;
+                for (i = 0; i < args.length; i++) {
+                    if (/name=[A-Za-z0-9\-]+/g.test(args[i])) {
+                        name = args[i].slice(args[i].search(/=[A-Za-z0-9\-]+/g) + 1);
+                    }
+                    if (/site=[A-Za-z0-9\-]+/g.test(args[i])) {
+                        site = args[i].slice(args[i].search(/=[A-Za-z0-9\-]+/g) + 1);
+                    }
+                    if (/method=[A-Za-z0-9\-]+/g.test(args[i])) {
+                        method = args[i].slice(args[i].search(/=[A-Za-z0-9\-]+/g) + 1);
+                    }
+                }
+                if (name == undefined) {
+                    name = "";
+                }
+                if (site == undefined) {
+                    site = "scp-wiki-cn";
+                }
+                if (method != "http") {
+                    method = "https";
+                }
+                link = method + "://" + site + ".wikidot.com/" + name;
+            } else {
+                link = "https://scp-wiki-cn.wikidot.com/" + arguments;
+            }
+            return link;
+        }
+    })
+</script>
+
+</html>
