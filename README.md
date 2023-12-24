@@ -20,4 +20,5 @@ to add a Tarot card drawer to your page.
 In this repo:
 
 `Tarot.html`: A Tarot card drawer and predictor. Multiple Horoscopes are supported. Click on each card to see its meaning.
+
 `SCP-Redirect.html`: SCP Redirector based on hoah2333's SCP Director. I added support to http links.
