@@ -20,3 +20,4 @@ to add a Tarot card drawer to your page.
 In this repo:
 
 `Tarot.html`: A Tarot card drawer and predictor. Multiple Horoscopes are supported. Click on each card to see its meaning.
+(https://ironsidesdawnlight.github.io/html-projects/SCP-Redirector.html)[SCP-Redirector.html]: A tool to redirect user to Wikidot pages. Can be used to bypass the current issue (23.12.25).
