@@ -1,0 +1,130 @@
+<!--
+    BASED ON hoah2333's SCP Redirector @ https://github.com/hoah2333/Archived-works/tree/main/SCP/scp-redirecter
+    DEPLOYED ON SCP-CN Wiki @ https://scp-wiki-cn.wikidot.com/component:scp-redirecter-tool
+    CC-By-SA 3.0
+-->
+
+<style>
+
+body {
+  font-family:Consolas;
+  font-size: 12.8px;
+  color: #333;
+}
+
+.link-container {
+  opacity:0;
+  position:absolute;
+  z-index:-10;
+  top:-1em;
+}
+
+</style>
+
+<body>
+    <div style="text-align:center">
+        <div id="url-type">
+            <input type="radio" name="url-sel" value="scp-wiki-cn" onclick="toggleSite()" checked>中文维基
+            <input type="radio" name="url-sel" value="scpsandboxcn" onclick="toggleSite()">沙盒
+            <input type="radio" name="url-sel" value="scp-wiki" onclick="toggleSite()">英文维基
+        </div>
+        <p>
+            <span>https://</span>
+            <input type="text" id="site" name="site" placeholder="site" size="25" style="display:none" >
+            <span id="url-pre">scp-wiki.wikidot.com/</span>
+            <input type="text" id="url" name="url" placeholder="URL" size="25" >
+        </p>
+        <p id="siteError" style="display:none">站点名称不能为空！</p>
+        <p>
+            <button onclick="Go()">打开</button>
+            <button onclick="ViewLink()">生成链接</button>
+        </p>
+        <p>
+            <span id="generated-link"></span>
+            <button onclick="CopyLink()" id="copybtn" style="display:none">复制链接</button>
+        </p>
+        <input id="link-container" class="link-container">
+    </div>
+</body>
+
+<script language="javascript">
+const customSites = ["{$custom1}", "{$custom2}", "{$custom3}", "{$custom4}", "{$custom5}"];
+
+function createRadio(container, value, text) {
+    container.innerHTML += '<input type="radio" name="url-sel" value="' + value + '" onclick="toggleSite()">' + text;
+}
+
+function populateSites() {
+    container = document.getElementById("url-type");
+    customSites.forEach( (v,i) => {
+        if (!v.includes("$")) {
+            createRadio(container, v, v);
+        }
+    })
+    createRadio(container, "other", "其他站点");
+}
+
+function getSiteSelection() {
+   var urltype = document.getElementsByName('url-sel');
+   for (element of urltype) {
+        if (element.checked){
+            return element.value;
+        }
+   }
+}
+
+function toggleSite(){
+    siteSelection = getSiteSelection();
+    if (siteSelection == "other") {
+        document.getElementById('site').style.display = 'inline';
+    }
+    else {
+        document.getElementById('site').style.display = 'none';
+    }
+    document.getElementById('url-pre').innerHTML = (siteSelection != "other" ? siteSelection : '') + '.wikidot.com/';
+}
+
+function getLink(){
+    siteSelection = getSiteSelection();
+    site = siteSelection != "other" ? siteSelection : document.getElementById('site').value;
+    url=document.getElementById("url").value;
+    if (!site || site == "") {
+        document.getElementById('siteError').style.display = 'inline';
+        return "";
+    }
+    else {
+        document.getElementById('siteError').style.display = 'none';
+    }
+    result = 'https://hoah2333.github.io/Archived-works/SCP/scp-redirecter/main.html?site=' + site;
+    if (url && url != ""){
+         result += '&name=' + url;
+    }
+    return result;
+}
+
+function Go(){
+    result = getLink();
+    if (result != "") {
+        document.getElementById("site").value = "";
+        document.getElementById("url").value = "";
+        window.open(result);
+    }
+}
+
+function ViewLink(){
+    result = getLink();
+    document.getElementById("generated-link").innerHTML = result;
+    document.getElementById("copybtn").style.display = result != "" ? "inline" : "none";
+    document.getElementById("link-container").value = result;
+}
+
+function CopyLink(){
+    document.getElementById("link-container").select();
+    document.execCommand("copy");
+}
+
+
+populateSites();
+toggleSite();
+
+</script>
